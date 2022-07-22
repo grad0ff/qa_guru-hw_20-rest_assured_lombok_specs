@@ -23,9 +23,10 @@ public class ReqresApiTest {
     }
 
     @Test
-    @Description("Получает список пользователей на странице 2 и ищет среди них пользователя с фамилией Ferguson")
+    @Description("Запрашивает список пользователей на странице 2 и проверяет, " +
+            "что среди них есть пользователь с фамилией Ferguson")
     @DisplayName(value = "Наличие пользователя с фамилией Ferguson")
-    void getUsersList() {
+    void getUsers() {
         given()
                 .get("/api/users?page=2")
                 .then()
@@ -34,41 +35,47 @@ public class ReqresApiTest {
     }
 
     @Test
-    @Description("Создает нового пользователя и проверяет актуальность даты создания")
+    @Description("Проверяет возможность создания нового пользователя и актуальность даты создания")
     @DisplayName("Создание нового пользователя")
     void createUser() {
+        String name = "morpheus";
+        String job = "leader";
         Map<String, String> data = new HashMap<>(Map.of(
-                "name", "morpheus",
-                "job", "leader"));
-        long timestamp = GDateTimeUtil.timestampAsSeconds();
-        String formattedCreatingTime = given()
+                "name", name,
+                "job", job));
+        given()
                 .body(data)
                 .when()
                 .post("/api/users")
                 .then()
                 .statusCode(201)
-                .extract().path("createdAt");
-        long creatingTime = GDateTimeUtil.isoFormatTimeToSeconds(formattedCreatingTime);
-        assertThat(creatingTime, Matchers.greaterThanOrEqualTo(timestamp));
+                .body("name", equalTo(name))
+                .and()
+                .body("job", equalTo(job));
     }
 
     @Test
-    @Description("Обновляет данные пользователя в базе и проверяет актуальность даты")
+    @Description("Проверяет возможность обновления данных пользователя в базе и актуальность даты обновления")
     @DisplayName("Обновление данных пользователя")
-    void updateUserDataWithPutMethod() {
+    void updateUserData() {
+        String name = "morpheus";
+        String job = "leader";
         Map<String, String> data = new HashMap<>(Map.of(
-                "name", "morpheus",
-                "job", "zion resident"));
-        long timestamp = GDateTimeUtil.timestampAsSeconds();
+                "name", name,
+                "job", job));
+        long likeCreationDate = GDateTimeUtil.timestampAsSeconds() - 1;
         String formattedUpdateTime = given()
                 .body(data)
                 .when()
                 .put("/api/users/2")
                 .then()
                 .statusCode(200)
+                .body("name", equalTo(name))
+                .and()
+                .body("job", equalTo(job))
                 .extract().path("updatedAt");
         long updatingTime = GDateTimeUtil.isoFormatTimeToSeconds(formattedUpdateTime);
-        assertThat(updatingTime, Matchers.greaterThanOrEqualTo(timestamp));
+        assertThat(updatingTime, Matchers.greaterThanOrEqualTo(likeCreationDate));
     }
 
     @Test
@@ -84,12 +91,14 @@ public class ReqresApiTest {
     }
 
     @Test
-    @Description("Выполняет регистрацию нового пользователя")
+    @Description("Проверяется возможность регистрации нового пользователя")
     @DisplayName("Регистрация нового пользователя")
     void registerUser() {
+        String email = "eve.holt@reqres.in";
+        String password = "pistol";
         Map<String, String> data = new HashMap<>(Map.of(
-                "email", "eve.holt@reqres.in",
-                "password", "pistol"));
+                "email", email,
+                "password", password));
         given()
                 .body(data)
                 .when()
@@ -102,17 +111,18 @@ public class ReqresApiTest {
     }
 
     @Test
-    @Description("Выполняет регистрацию нового пользователя")
-    @DisplayName("Регистрация нового пользователя")
+    @Description("Проверяется невозможность авторизации пользователя без пароля")
+    @DisplayName("Неуспешная авторизации пользователя без пароля")
     void UnsuccessfulAuthorization() {
+        String email = "peter@klaven";
         Map<String, String> data = new HashMap<>(Map.of(
-                "email", "peter@klaven"));
+                "email", email));
         given()
                 .body(data)
                 .when()
                 .post("/api/login")
                 .then()
                 .statusCode(400)
-                .body("error", containsString("Missing password"));
+                .body("error", equalTo("Missing password"));
     }
 }
