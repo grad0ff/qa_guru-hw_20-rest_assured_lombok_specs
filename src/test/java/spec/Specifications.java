@@ -1,4 +1,4 @@
-package api;
+package spec;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -14,9 +14,9 @@ public class Specifications {
 
 	private static RequestSpecification setRequestSpec() {
 		return with()
+				.contentType(ContentType.JSON)
 				.baseUri(baseUri)
-				.basePath(basePath)
-				.contentType(ContentType.JSON);
+				.basePath(basePath);
 	}
 
 	private static ResponseSpecification setResponseSpec() {
@@ -25,7 +25,7 @@ public class Specifications {
 				.contentType(ContentType.JSON);
 	}
 
-	static void installSpecifications() {
+	public static void installSpecifications() {
 		requestSpecification = setRequestSpec();
 		responseSpecification = setResponseSpec();
 		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();

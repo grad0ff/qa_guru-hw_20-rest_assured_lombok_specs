@@ -1,10 +1,11 @@
-package api;
+package api_tests;
 
 import jdk.jfr.Description;
 import models.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import spec.Specifications;
 import utils.GDateTimeUtil;
 
 import static io.restassured.RestAssured.given;
