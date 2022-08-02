@@ -5,10 +5,8 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CreateUserResponsePojoModel {
+public class RegisterUserResponsePojoModel {
 
-	private String name;
-	private String job;
-	private String id;
-	private String createdAt;
+	private Integer id;
+	private String token;
 }

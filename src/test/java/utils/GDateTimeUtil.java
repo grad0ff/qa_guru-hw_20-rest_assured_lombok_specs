@@ -9,17 +9,17 @@ import java.util.Calendar;
  */
 public class GDateTimeUtil {
 
-    /**
-     * Возвращает текущее время в секундах, прошедших с начала эпохи Unix
-     */
-    public static long timestampAsSeconds() {
-        return Calendar.getInstance().toInstant().getLong(ChronoField.INSTANT_SECONDS);
-    }
+	/**
+	 * Возвращает текущее время в секундах, прошедших с начала эпохи Unix
+	 */
+	public static long timestampInSeconds() {
+		return Calendar.getInstance().toInstant().getLong(ChronoField.INSTANT_SECONDS);
+	}
 
-    /**
-     * Возвращает переданное время в секундах, прошедших с начала эпохи Unix
-     */
-    public static long isoFormatTimeToSeconds(String dateTimeInIso) {
-        return DateTimeFormatter.ISO_INSTANT.parse(dateTimeInIso).getLong(ChronoField.INSTANT_SECONDS);
-    }
+	/**
+	 * Возвращает переданное время в секундах, прошедших с начала эпохи Unix
+	 */
+	public static long isoFormatTimeToSeconds(String dateTimeInIso) {
+		return DateTimeFormatter.ISO_INSTANT.parse(dateTimeInIso).getLong(ChronoField.INSTANT_SECONDS);
+	}
 }
